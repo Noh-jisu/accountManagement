@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>거래처 조회</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="./jquery/jquery.twbsPagination.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<style type="text/css">
+	table, th, td{
+		border: 1px solid black;
+	}
+	
+	thead{
+		text-align: center;
+	}
+	
+	div{
+		border: 1px solid black;
+		margin: 1%
+	}
+	
+	tr td{
+		border: 1px solid black;
+		cursor: pointer;
+	}
+	
+	#mainBox{
+		display: flex;
+		justify-content: center;
+	}
+	
+	#searchFrame{
+		width: 30%;
+	}
+	
+	#detailFrame{
+		width: 65%;
+	}
+</style>
+</head>
+<body>
+<div id="mainBox">
+	<div id="searchFrame">
+		<header>
+			<div>
+				<p>사업자 번호 <input type="text" id=busiNum></p>
+				<p>거래처명 <input type="text" id="customName"></p>
+				<p><button type="button" id="searchList">조회</button></p>
+			</div>
+		</header>
+		<br>
+		<section>
+			<div>
+				<table>
+					<thead>
+						<tr>
+							<th>사업자번호</th>
+							<th>거래처명</th>
+						</tr>
+					</thead>
+					<tbody id="customList">
+						
+					</tbody>
+				</table>
+			</div>
+			<br>
+			<div>
+				<button type="button" id="insertData">등록하기</button>
+			</div>
+		</section>
+	</div>
+	<div id="detailFrame">
+		<section>
+		<div align="center">
+			<form id="form">
+				<p>사업자번호 <input type="text" id="busiNum" name="busiNum" readonly="readonly"></p>
+				<p>약칭 <input type="text" id="Short" name="Short"></p>
+				<p>거래처명 <input type="text" id="custom" name="custom"></p>
+				<p>대표자 <input type="text" id="ceo" name="ceo"></p>
+				<p>담당자 <input type="text" id="charge_person" name="chargePerson"></p>
+				<p>업태 <input type="text" id="busi_condition" name="busiCondition"></p>
+				<p>종목 <input type="text" id="item" name="item"></p>
+				<p>우편번호 <input type="text" id="post_num" name="postNum" readonly="readonly"> <button type="button" onclick="kakaopost()">검색</button></p>
+				<p>주소1 <input type="text" size=50 id="addr1" name="addr1" readonly="readonly"></p>
+				<p>주소2 <input type="text" size=50 id="addr2" name="addr2"></p>
+				<p>전화번호 <input type="text" id="tel" name="tel"></p>
+				<p>팩스번호 <input type="text" id="fax" name="fax"></p>
+				<p>홈페이지 <input type="text" id="homepage" name="homepage"></p>
+				<p>법인여부 <input type="radio" id="coY" name="coYn" value="y">법인 <input type="radio" id="coN" name="coYn" value="n">개인</p>
+				<p>해외여부 <input type="radio" id="foreignY" name="foreignYn" value="y">국내 <input type="radio" id="foreignN" name="foreignYn" value="n">해외</p>
+				<p>과세구분 
+				<select name="taxYn">
+					<option id="choice">선택</option>
+					<option id="taxY" value="y">과세</option>
+					<option id="taxN" value="n">면세</option>
+				</select>
+				</p>
+				<p>국가
+					<input type="text" id="country_eng" name="countryEng" readonly="readonly">
+					<input type="text" id="country_kor" name="countryKor" readonly="readonly">
+					<button type="button" id="searchCountry" data-bs-toggle="modal" data-bs-target="#exampleModal" role="button">검색</button>
+				</p>		
+				<p>
+					특수관계자 <input type="checkbox" name="special_relation_check" id="special_relation">
+					<input type="hidden" name="specialRelation" id="special_relation_hidden">
+				</p>
+				<p>
+					거래중지 <input type="checkbox" name="trade_stop_check" id="trade_stop">
+					<input type="hidden" name="tradeStop" id="trade_stop_hidden">
+				</p>
+				<p>계약기간 
+					<input type="date" id="startDate" name="contractPeriodS">
+					<input type="date" id="endDate" name="contractPeriodE">
+				</p>
+				<p>등록정보 <input type="text" id="regi_info_man" name="regiInfoMan"></p>
+				<p>변경정보 <input type="text" id="modi_info_man" name="modiInfoMan"></p>
+			</form>
+			<table>
+				<thead>
+					<tr>
+						<th>사무소</th>
+						<th>은행</th>
+						<th>계좌번호</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><input type="text" id="factory" placeholder="정보를 입력해주세요"></td>
+						<td><input type="text" id="trade_bank" placeholder="정보를 입력해주세요"></td>
+						<td><input type="text" id="account_num" placeholder="정보를 입력해주세요"></td>
+					</tr>
+				</tbody>
+			</table>
+			
+			<p><button type="button" id="updateBtn">수정</button> <button type="button" id="deleteBtn">삭제</button></p>
+			
+			
+			
+			
+			<div class="modal fade" id="exampleModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-scrollable">
+				    <div class="modal-content">
+				    	<div class="modal-header">
+				    		<h5 class="modal-title">나라목록</h5>
+				    	</div>
+				    	<div class="modal-body">
+					    	<div class="mb-3" id="countryList">
+								<table>
+									<thead>
+										<tr>
+											<th>ENG</th>
+											<th>KOR</th>
+										</tr>
+									</thead>
+									<tbody id="tbody">
+									
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" data-bs-dismiss="modal">취소</button>
+						</div>
+				    </div>
+				</div>
+			</div>
+			
+		</div>
+		</section>
+	</div>
+</div>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+	// 등록하기 버튼 클릭 이벤트
+	$("#insertData").click(function(){
+		location.href = "insertData.html";
+	});
+	
+	// 조회하기 버튼 클릭 이벤트
+	$("#searchList").click(function(){
+		searchCustom()
+	});
+});
+
+function searchCustom(){
+	let busiNum = $("#busiNum").val();
+	let customName = $("#customName").val();
+	
+	$.ajax({
+		url:"http://localhost:3000/searchCustom",
+		type:"get",
+		data: {
+			"busiNum" : busiNum,
+			"customName" : customName
+		},
+		success: function(list){
+			//alert('success');
+			sessionStorage.setItem("busiNum", JSON.stringify(list));
+			// tbody초기화
+			$("#customList").html("");
+			
+			$.each(list, function(i, item){
+				
+				let str = "";
+				console.log(item);
+				// 등록된 거래처가 있을때
+				if(item != null){
+
+					str = '<tr onclick="page(' + i + ')"><td>' + item.busiNum + '</td><td>' + item.custom + '</td></tr>'
+					
+				}
+				// 등록된 거래처가 없을때
+				else{
+					str = '<tr><td>등록된 거래처가 없습니다</td></tr>';
+				}
+				
+				$("#customList").append(str);
+				
+			});
+		},
+		error: function(){
+			alert('error');
+		}
+	});
+}
+
+function page(i){	
+	location.href = "updAndDel.html?num=" + i;
+}
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="custom.account.server.dao.CustomDao">
+
+	<!-- 거래처 등록 -->
+	<insert id="insertData" parameterType="custom.account.server.dto.CustomDto">
+		INSERT INTO CUSTOM(BUSI_NUM, CUSTOM, SHORT, CEO, CHARGE_PERSON, BUSI_CONDITION,
+						ITEM, POST_NUM, ADDR1, ADDR2, TEL, FAX, HOMEPAGE, CO_YN, FOREIGN_YN,
+						TAX_YN, COUNTRY_ENG, COUNTRY_KOR, SPECIAL_RELATION, TRADE_STOP,
+						CONTRACT_PERIOD_S, CONTRACT_PERIOD_E, REGI_INFO_MAN, REGI_INFO_DATE,
+						MODI_INFO_MAN, MODI_INFO_DATE)
+		VALUES(				#{busiNum}, #{custom}, #{Short}, #{ceo}, #{chargePerson}, #{busiCondition},
+							#{item}, #{postNum}, #{addr1}, #{addr2}, #{tel}, #{fax}, #{homepage},
+							#{coYn}, #{foreignYn}, #{taxYn}, #{countryEng}, #{countryKor},
+							#{specialRelation}, #{tradeStop}, #{contractPeriodS}, #{contractPeriodE},
+							#{regiInfoMan}, SYSDATE, #{modiInfoMan}, SYSDATE)
+		 
+	</insert>
+	
+	<!-- 계좌정보 등록 -->
+	<insert id="insertAccount" parameterType="custom.account.server.dto.AccountDto">
+		INSERT INTO ACCOUNT(BUSI_NUM, FACTORY, TRADE_BANK, ACCOUNT_NUM)
+		VALUES(				#{busiNum}, #{factory}, #{tradeBank}, #{accountNum})
+	</insert>
+	
+	<!-- 국가 목록조회 -->
+	<select id="searchCountry" resultType="custom.account.server.dto.CountryDto">
+		SELECT * FROM COUNTRY
+	</select>
+	
+	<!-- 거래처 목록 조회 -->
+	<select id="searchCustom" parameterType="custom.account.server.dto.CustomParam" resultType="custom.account.server.dto.CustomDto">
+		SELECT * FROM CUSTOM
+		WHERE CUSTOM LIKE '%'||#{customName}||'%' AND BUSI_NUM LIKE '%'||#{busiNum}||'%'
+		<!-- 1=1 -->
+			<!-- <if test="busiNum != null and busiNum != ''">
+				AND BUSI_NUM LIKE '%'||#{busiNum}||'%'
+			</if>
+			<if test="customName != null and customName != ''">
+				AND CUSTOM LIKE '%'||#{customName}||'%'
+			</if>
+			<if test="customName != null and customName != '' and busiNum != null and busiNum != ''">
+				AND CUSTOM LIKE '%'||#{customName}||'%' AND BUSI_NUM LIKE '%'||#{busiNum}||'%'
+			</if> -->
+	</select>
+	
+	<!-- 선택한 거래처 정보 불러오기 -->
+	<select id="getCustomDetail" parameterType="string" resultType="custom.account.server.dto.TotalDto">
+		SELECT a.BUSI_NUM, a.CUSTOM, a.SHORT, a.CEO, a.CHARGE_PERSON, a.BUSI_CONDITION,
+			a.ITEM, a.POST_NUM, a.ADDR1, a.ADDR2, a.TEL, a.FAX, a.HOMEPAGE, a.CO_YN, a.FOREIGN_YN,
+			a.TAX_YN, a.COUNTRY_ENG, a.COUNTRY_KOR, a.SPECIAL_RELATION, a.TRADE_STOP,
+			a.CONTRACT_PERIOD_S, a.CONTRACT_PERIOD_E, a.REGI_INFO_MAN, a.REGI_INFO_DATE,
+			a.MODI_INFO_MAN, a.MODI_INFO_DATE, b.FACTORY, b.TRADE_BANK, b.ACCOUNT_NUM
+		FROM CUSTOM a, ACCOUNT b
+		WHERE a.BUSI_NUM=#{busiNum} AND b.BUSI_NUM = #{busiNum}
+	</select>
+	
+	<!-- 해당 거래처 정보 삭제 -->
+	<delete id="deleteCustom" parameterType="string">
+		DELETE FROM CUSTOM
+		WHERE BUSI_NUM = #{busiNum}
+	</delete>
+	
+	<!-- 해당 거래처 정보 수정 -->
+	<update id="updateCustom" parameterType="custom.account.server.dto.CustomDto">
+		UPDATE CUSTOM
+		SET CUSTOM = #{custom},
+			SHORT = #{Short},
+			CEO = #{ceo},
+			CHARGE_PERSON = #{chargePerson},
+			BUSI_CONDITION = #{busiCondition},
+			ITEM = #{item},
+			POST_NUM = #{postNum},
+			ADDR1 = #{addr1},
+			ADDR2 = #{addr2},
+			TEL = #{tel},
+			FAX = #{fax},
+			HOMEPAGE = #{homepage},
+			CO_YN = #{coYn},
+			FOREIGN_YN = #{foreignYn},
+			TAX_YN = #{taxYn},
+			COUNTRY_ENG = #{countryEng},
+			COUNTRY_KOR = #{countryKor},
+			SPECIAL_RELATION = #{specialRelation},
+			TRADE_STOP = #{tradeStop},
+			CONTRACT_PERIOD_S = #{contractPeriodS},
+			CONTRACT_PERIOD_E = #{contractPeriodE},
+			REGI_INFO_MAN = #{regiInfoMan},
+			MODI_INFO_MAN = #{modiInfoMan},
+			MODI_INFO_DATE = SYSDATE
+		WHERE BUSI_NUM = #{busiNum}
+	</update>
+	
+	<!-- 해당 계좌정보 수정 -->
+	<update id="updateAccount" parameterType="custom.account.server.dto.AccountDto">
+		UPDATE ACCOUNT
+		SET FACTORY = #{factory},
+			TRADE_BANK = #{tradeBank},
+			ACCOUNT_NUM = #{accountNum}
+		WHERE BUSI_NUM = #{busiNum}
+	</update>
+
+</mapper>
