@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>거래처 조회</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="./jquery/jquery.twbsPagination.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<style type="text/css">
+	table, th, td{
+		border: 2px solid black;
+	}
+	
+	thead{
+		text-align: center;
+	}
+	
+	tr td{
+		border: 2px solid black;
+		cursor: pointer;
+	}
+	
+	#mainBox{
+		display: flex;
+		justify-content: center;
+		margin: 20px;
+	}
+	
+	#searchFrame{
+		width: 30%;
+		margin: 20px;
+		padding: 20px;
+	}
+	
+	.boxLine{
+		border: 2px solid black;
+		padding: 20px;
+	}
+	
+	#searchBox{
+		border: 2px solid black;
+		margin-top: 50px;
+		padding: 20px;
+	}
+	
+	.radioBox{
+		border: 1px solid black;
+		padding: 0 20px;
+	}
+	
+	#detailFrame{
+		width: 65%;
+		margin: 20px;
+		padding: 20px;
+	}
+	
+	.displayFlex{
+		display: flex;
+	}
+	.title{
+		margin-right: 4px;
+	}
+	#parent>div{
+		margin: 10px;
+	}
+	
+	#parent{
+		margin-top: 20px;
+	}
+	
+</style>
+</head>
+<body>
+<div id="mainBox">
+	<div id="searchFrame">
+		<header>
+			<div id="searchBox">
+				<div class="displayFlex" style="margin-bottom: 15px;">
+					<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+						<div>사업자번호</div>
+					</div>
+					<div>
+						<input type="text" id=busiNum>
+					</div>
+				</div>
+				<div class="displayFlex">
+					<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+						<div>거래처명</div>
+					</div>
+					<div>
+						<input type="text" id="customName">
+					</div>
+					<div style="margin-left: 50px;">
+						<button type="button" id="searchList">조회</button>
+					</div>
+				</div>
+			</div>
+		</header>
+		<br>
+		<section>
+			<div class="boxLine">
+				<table>
+					<thead>
+						<tr>
+							<th style="width:250px;">사업자 번호</th>
+							<th style="width:250px;">거래처명</th>
+						</tr>
+					</thead>
+					<tbody id="customList">
+						
+					</tbody>
+				</table>
+			</div>
+		</section>
+	</div>
+	<div id="detailFrame">
+		<section>
+		<form id="form">
+			<div align="right">
+				<input type="reset"> <input type="button" id="insertData" value="등록"> <input type="button" id="updateBtn" value="수정"> <input type="button" id="deleteBtn" value="삭제">
+			</div>
+			<div class="boxLine" id="parent">
+					
+					<div class="displayFlex">
+						<div style="width:45%;" class="displayFlex">
+							<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+								<div>사</div><div>업</div><div>자</div><div>번</div><div>호</div>
+								<!-- <div style="text-align: justify;">사업자번호</div> -->
+							</div>
+							<div>
+								<input type="text" id="busi_num" name="busiNum">
+							</div>
+						</div>
+						<div style="width:45%;" class="displayFlex">
+							<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+								<div>약</div><div>칭</div>
+							</div>
+							<div>
+								<input type="text" id="Short" name="Short">
+							</div>
+						</div>
+					</div>
+					<div class="displayFlex">
+						<div style="width:650px;" class="displayFlex">
+							<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+								<div>거</div><div>래</div><div>처</div><div>명</div>
+							</div>
+							<div>
+								<input type="text" size=53 id="custom" name="custom">
+							</div>
+							 
+						</div>
+					</div>
+					<div class="displayFlex">
+						<div style="width:45%;" class="displayFlex">
+							<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+								<div>대</div><div>표</div><div>자</div>
+							</div>
+							<div>
+								<input type="text" id="ceo" name="ceo">
+							</div>
+						</div>
+						<div style="width:45%;" class="displayFlex">
+							<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+								<div>담</div><div>당</div><div>자</div>
+							</div>
+							<div>
+								<input type="text" id="charge_person" name="chargePerson">
+							</div>
+						</div>
+					</div>
+					<div class="displayFlex">
+						<div style="width:45%;" class="displayFlex">
+							<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+								<div>업</div><div>태</div>
+							</div>
+							<div>
+								<input type="text" id="busi_condition" name="busiCondition">
+							</div>
+						</div>
+						<div style="width:45%;" class="displayFlex">
+							<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+								<div>종</div><div>목</div>
+							</div>
+							<div>
+								<input type="text" id="item" name="item">
+							</div>
+						</div>
+					</div>
+					<div class="displayFlex">
+						<div style="width:45%;" class="displayFlex">
+							<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+								<div>우</div><div>편</div><div>번</div><div>호</div>
+							</div>
+							<div>
+								<input type="text" id="post_num" name="postNum" readonly="readonly"> <button type="button" onclick="kakaopost()">검색</button>
+							</div>
+						</div>
+						<div style="width:45%;" class="displayFlex">
+							<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+								<div>주</div><div>소</div><div>1</div>
+							</div>
+							<div>
+								<input type="text" size=30 id="addr1" name="addr1" readonly="readonly">
+							</div>
+						</div>
+					</div>
+					<div class="displayFlex">
+						<div style="width:700px;" class="displayFlex">
+							<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+								<div>주</div><div>소</div><div>2</div>
+							</div>
+							<div>
+								<input type="text" size=70 id="addr2" name="addr2">
+							</div>
+						</div>
+					</div>
+					<div class="displayFlex">
+						<div style="width:45%;" class="displayFlex">
+							<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+								<div>전</div><div>화</div><div>번</div><div>호</div>
+							</div>
+							<div>
+								<input type="text" id="tel" name="tel">
+							</div>
+						</div>
+						<div style="width:45%;" class="displayFlex">
+							<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+								<div>팩</div><div>스</div><div>번</div><div>호</div>
+							</div>
+							<div>
+								<input type="text" id="fax" name="fax">
+							</div>
+						</div>
+					</div>
+					<div class="displayFlex">
+						<div style="width:650px;" class="displayFlex">
+							<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+								<div>홈</div><div>페</div><div>이</div><div>지</div>
+							</div>
+							<div>
+								<input type="text" size="65" id="homepage" name="homepage">
+							</div>
+						</div>
+					</div>
+					<div class="displayFlex">
+						<div style="width:45%;" class="displayFlex">
+							<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+								<div>법</div><div>인</div><div>여</div><div>부</div>
+							</div>
+							<div class="radioBox displayFlex">
+								<div style="margin-right: 15px;"><input type="radio" id="coY" name="coYn" value="y">법인</div>
+								<div><input type="radio" id="coN" name="coYn" value="n">개인</div>
+							</div>
+						</div>
+						<div style="width:45%;" class="displayFlex">
+							<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+								<div>해</div><div>외</div><div>여</div><div>부</div>
+							</div>
+							<div class="radioBox displayFlex">
+								<div style="margin-right: 15px;"><input type="radio" id="foreignY" name="foreignYn" value="y">국내</div>
+								<div><input type="radio" id="foreignN" name="foreignYn" value="n">해외</div>
+							</div>
+						</div>
+					</div>
+					<div class="displayFlex">
+						<div style="width:45%;" class="displayFlex">
+							<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+								<div>과</div><div>세</div><div>구</div><div>분</div>
+							</div>
+							<div>
+								<select name="taxYn">
+									<option id="choice" value="0">선택</option>
+									<option id="taxY" value="y">과세</option>
+									<option id="taxN" value="n">면세</option>
+								</select>
+							</div>
+						</div>
+						<div style="width:45%;" class="displayFlex">
+							<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+								<div>국</div><div>가</div>
+							</div>
+							<div>
+								<input type="text" size="5" id="country_eng" name="countryEng" readonly="readonly">
+								<input type="text" size="16" id="country_kor" name="countryKor" readonly="readonly">
+								<button type="button" id="searchCountry" data-bs-toggle="modal" data-bs-target="#exampleModal" role="button">검색</button>
+							</div>
+						</div>
+					</div>
+					<div class="displayFlex">
+						<div style="width:45%;" class="displayFlex">
+							<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+								<div>특</div><div>수</div><div>관</div><div>계</div><div>자</div>
+							</div>
+							<div>
+								<input type="checkbox" name="special_relation_check" id="special_relation">
+								<input type="hidden" name="specialRelation" id="special_relation_hidden">
+							</div>
+						</div>
+						<div style="width:45%;" class="displayFlex">
+							<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+								<div>거</div><div>래</div><div>중</div><div>지</div>
+							</div>
+							<div>
+								<input type="checkbox" name="trade_stop_check" id="trade_stop">
+								<input type="hidden" name="tradeStop" id="trade_stop_hidden">
+							</div>
+						</div>
+					</div>
+					<div class="displayFlex">
+						<div style="width:45%;" class="displayFlex">
+							<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+								<div>계</div><div>약</div><div>기</div><div>간</div>
+							</div>
+							<div>
+								<input type="date" id="startDate" name="contractPeriodS">
+							</div>
+						</div>
+						<div style="width:45%;" class="displayFlex">
+							<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+								<input type="date" id="endDate" name="contractPeriodE">
+							</div>
+						</div>
+					</div>
+					<div class="displayFlex">
+						<div style="width:45%;" class="displayFlex">
+							<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+								<div>등</div><div>록</div><div>정</div><div>보</div>
+							</div>
+							<div>
+								<input type="text" id="regi_info_man" name="regiInfoMan">
+							</div>
+						</div>
+						<div style="width:45%;" class="displayFlex">
+							<div style="width:110px; justify-content: space-between;" class="displayFlex title">
+								<div>변</div><div>경</div><div>정</div><div>보</div>
+							</div>
+							<div>
+								<input type="text" id="modi_info_man" name="modiInfoMan">
+							</div>
+						</div>
+					</div>
+				
+				<h4>(거래처 계좌정보)</h4>
+				<table>
+					<thead>
+						<tr>
+							<th style="width:330px;">사무소</th>
+							<th style="width:340px;">은행</th>
+							<th style="width:350px;">계좌번호</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><input type="text" size=39 style="text-align: center;" id="factory" name="factory" placeholder="정보를 입력해주세요"></td>
+							<td><input type="text" size=39 style="text-align: center;" id="trade_bank" name="tradeBank" placeholder="정보를 입력해주세요"></td>
+							<td><input type="text" size=39 style="text-align: center;" id="account_num" name="accountNum" placeholder="정보를 입력해주세요"></td>
+						</tr>
+					</tbody>
+				</table>
+				
+				
+				
+				<div class="modal fade" id="exampleModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-scrollable">
+					    <div class="modal-content">
+					    	<div class="modal-header">
+					    		<h5 class="modal-title">나라목록</h5>
+					    	</div>
+					    	<div class="modal-body">
+						    	<div class="mb-3" id="countryList">
+									<table>
+										<thead>
+											<tr>
+												<th>ENG</th>
+												<th>KOR</th>
+											</tr>
+										</thead>
+										<tbody id="tbody">
+										
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" data-bs-dismiss="modal">취소</button>
+							</div>
+					    </div>
+					</div>
+				</div>
+				
+			</div>
+		</form>
+		</section>
+	</div>
+</div>
+
+<script type="text/javascript">
+//체크박스
+// 특수관계자
+$("#special_relation").change(
+	function(){
+		if($("#special_relation").is(":checked")){
+			$("#special_relation_hidden").val("y");
+		}else{
+			$("#special_relation_hidden").val("n");
+		}
+	}
+);
+	
+// 거래중지
+$("#special_relation").change(
+	function(){
+		if($("#trade_stop").is(":checked")){
+			$("#trade_stop_hidden").val("y");
+		}else{
+			$("#trade_stop_hidden").val("n");
+		}
+	}
+);
+
+$(document).ready(function(){
+	// 조회 버튼
+	$("#searchList").click(function(){
+		searchCustom()
+	});
+	
+	// 등록 버튼
+	$("#insertData").click(function(){
+		insertCustomData()
+	});
+	
+	// 수정 버튼
+	$("#updateBtn").click(function(){
+		updateCustomData()
+	});
+
+	// 삭제 버튼
+	$("#deleteBtn").click(function(){
+		deleteCustomData()
+	});
+	
+	// 국가목록 세팅
+	countryList()
+	
+});
+
+// 거래처 목록 조회
+function searchCustom(){
+	let busiNum = $("#busiNum").val();
+	let customName = $("#customName").val();
+	
+	$.ajax({
+		url:"http://localhost:3000/searchCustom",
+		type:"get",
+		data: {
+			"busiNum" : busiNum, "customName" : customName },
+		success: function(list){
+			//alert('success');
+			sessionStorage.setItem("busiNum", JSON.stringify(list));
+			// tbody초기화
+			$("#customList").html("");			
+			$.each(list, function(i, item){				
+				let str = "";
+				console.log(item);
+				// 등록된 거래처가 있을때
+				if(item != null){
+					str = '<tr onclick="page(' + i + ')"><td align="center">' + item.busiNum + '</td><td align="center">' + item.custom + '</td></tr>'
+				}
+				// 등록된 거래처가 없을때
+				else{
+					str = '<tr><td>등록된 거래처가 없습니다</td></tr>';
+				}				
+				$("#customList").append(str);
+			});
+		},
+		error: function(){
+			alert('error');
+		}
+	});
+}
+
+// 거래처 등록 함수
+function insertCustomData(){
+	// 공백확인
+	if($("#busi_num").val().trim() == null || $("#busi_num").val().trim() == ""){
+		alert("사업자번호를 입력해주세요");
+	}
+	else if($("#custom").val().trim() == null || $("#custom").val().trim() == ""){
+		alert("거래처명을 입력해주세요.");
+	}
+	else if($("input[name=coYn]:checked").val() == null || $("input[name=coYn]:checked").val() == ""){
+		alert("법인여부를 선택해주세요.");
+	}
+	else if($("input[name=foreignYn]:checked").val() == null || $("input[name=foreignYn]:checked").val() == ""){
+		alert("해외여부 선택해주세요.");
+	}
+	else if($("#choice").is(":checked")){
+		alert("과세구분을 선택해주세요.");
+	}
+	else if($("#regi_info_man").val() == null || $("#regi_info_man").val() == ""){
+		alert("등록정보를 입력해주세요.")
+	}
+	// 이상없을 시 DB삽입 실행
+	else{
+		$.ajax({
+			url: "http://localhost:3000/insertTotal",
+			type: "post",
+			data: $("#form").serialize(),
+			success: function(msg){
+				//alert('success');
+				if(msg == "success"){
+					alert('거래처 등록 성공');
+					resetTag()
+					searchCustom()
+				}else{
+					alert('거래처 등록 실패');
+				}
+			},
+			error: function(){
+				alert('error');
+			}
+		});		 
+	}
+}
+
+// 거래처 수정 함수
+function updateCustomData(){
+	// 공백확인
+	if($("#custom").val().trim() == null || $("#custom").val().trim() == ""){
+		alert("거래처명을 입력해주세요.");
+	}
+	else if($("input[name=coYn]:checked").val() == null || $("input[name=coYn]:checked").val() == ""){
+		alert("법인여부를 선택해주세요.");
+	}
+	else if($("input[name=foreignYn]:checked").val() == null || $("input[name=foreignYn]:checked").val() == ""){
+		alert("해외여부 선택해주세요.");
+	}
+	else if($("#choice").is(":checked")){
+		alert("과세구분을 선택해주세요.");
+	}
+	else if($("#regi_info_man").val() == null || $("#regi_info_man").val() == ""){
+		alert("등록정보를 입력해주세요.")
+	}
+	// 이상없을 시 DB수정 실행
+	else{
+		if(typeof sessionStorage.getItem("primary") != 'undefined'){
+			let busiNum = sessionStorage.getItem("primary");
+			if(busiNum != $("#busi_num").val().trim()){
+				alert('사업자번호는 수정할 수 없습니다.');
+			}else{
+				$.ajax({
+					url: "http://localhost:3000/updateTotal",
+					type: "post",
+					data: $("#form").serialize(),
+					success: function(msg){
+						//alert('success');
+						if(msg == "success"){
+							alert('거래처 수정 성공');
+							resetTag()
+							searchCustom()
+						}else{
+							alert('거래처 수정 실패');
+						}
+					},
+					error: function(){
+						alert('error');
+					}
+				});
+			}
+		}
+		 
+	}
+}
+
+// 거래처 삭제 함수
+function deleteCustomData(){
+	$.ajax({
+		url: "http://localhost:3000/deleteTotal",
+		tpye: "post",
+		data: {"busiNum" : $("#busi_num").val().trim()},
+		success: function(msg){
+			alert('거래처 정보 삭제완료.');
+			resetTag()
+			searchCustom()
+		},
+		error: function(){
+			alert('error');
+		}
+	})
+}
+
+// 국가 목록 조회
+function countryList(){
+	$.ajax({
+		url: "http://localhost:3000/searchCountry",
+		type: "post",
+		success: function(list){
+			$.each(list, function(i, item){
+				let str = "";
+				if(item != null){
+					str = '<tr onclick="insertval(this)"><td>' + item.eng + '</td><td>' + item.kor + '</td></tr>'
+				}else{
+					str = '<tr><td>나라목록이 없습니다.</td></tr>'
+				}
+				$("#tbody").append(str);
+			});
+		},
+		error: function(){
+			alert('error');
+		}
+	});
+}
+
+// 조회된 거래처목록 클릭 이벤트
+function page(i){
+	let str = sessionStorage.getItem("busiNum");
+	let json = JSON.parse(str);
+	let data = json[i].busiNum;
+	sessionStorage.setItem("primary", data);
+	
+	$.ajax({
+		url: "http://localhost:3000/getCustomDetail",
+		type: "post",
+		data: {"busiNum" : data},
+		success: function(dto){
+			console.log(dto);
+			
+			$("#busi_num").val(dto.busiNum);
+			$("#Short").val(dto.short);
+			$("#custom").val(dto.custom);
+			$("#ceo").val(dto.ceo);
+			$("#charge_person").val(dto.chargePerson);
+			$("#busi_condition").val(dto.busiCondition);
+			$("#item").val(dto.item);
+			$("#post_num").val(dto.postNum);
+			$("#addr1").val(dto.addr1);
+			$("#addr2").val(dto.addr2);
+			$("#tel").val(dto.tel);
+			$("#fax").val(dto.fax);
+			$("#homepage").val(dto.homepage);
+			// 라디오버튼 체크하기
+			if(dto.coYn == "y"){
+				$("#coY").prop("checked", true);
+			}else{
+				$("#coN").prop("checked", true);
+			}
+			
+			if(dto.foreignYn == "y"){
+				$("#foreignY").prop("checked", true);
+			}else{
+				$("#foreignN").prop("checked", true);
+			}
+			
+			// select 체크하기
+			if(dto.taxYn == "y"){
+				console.log(dto.taxYn);
+				$("#taxY").val("y").prop("selected", true);
+			}else{
+				$("#taxN").val("n").prop("selected", true);
+			}
+			
+			$("#country_eng").val(dto.countryEng);
+			$("#country_kor").val(dto.countryKor);
+			
+			// 체크박스 체크하기
+			if(dto.specialRelation == "y"){
+				$("input:checkbox[id='special_relation']").prop("checked", true);
+				$("#special_relation_hidden").val("y");
+			}else{
+				$("input:checkbox[id='special_relation']").prop("checked", false);
+				$("#special_relation_hidden").val("n");
+			}
+			
+			if(dto.tradeStop == "y"){
+				$("input:checkbox[id='trade_stop']").prop("checked", true);
+				$("#trade_stop_hidden").val("y");
+			}else{
+				$("input:checkbox[id='trade_stop']").prop("checked", false);
+				$("#trade_stop_hidden").val("n");
+			}
+			
+			// 날짜 기본값 선택
+			document.getElementById('startDate').value = dto.contractPeriodS.slice(0, 10);
+			document.getElementById('endDate').value = dto.contractPeriodE.slice(0, 10);
+			
+			$("#regi_info_man").val(dto.regiInfoMan);
+			$("#modi_info_man").val(dto.modiInfoMan);
+			
+			// 거래처 계좌정보
+			$("#factory").val(dto.factory);
+			$("#trade_bank").val(dto.tradeBank);
+			$("#account_num").val(dto.accountNum);
+			
+		},
+		error: function(){
+			alert('error');
+		}
+	});
+}
+
+function insertval(tag){
+	var str = "";
+	var tdArr = new Array();
+	
+	var tr = $(tag);
+	var td = tr.children();
+	
+	console.log("클락한 Row의 모든 데이터 : " + tr.text());
+	
+	td.each(function(i){
+		tdArr.push(td.eq(i).text());
+	});
+	
+	console.log("배열에 담긴 값 : " + tdArr);
+	
+	$("#country_eng").val(tdArr[0]);
+	$("#country_kor").val(tdArr[1]);
+	
+	$("#exampleModal").modal('hide');
+}
+
+// 우편번호검색 API
+function kakaopost(){
+	new daum.Postcode({
+        oncomplete: function(data) {
+            $("#post_num").val(data.zonecode);
+            $("#addr1").val(data.address);
+            // 예제를 참고하여 다양한 활용법을 확인해 보세요.
+        }
+    }).open();
+}
+
+
+function resetTag(){
+		
+	$("#busi_num").val("");
+	$("#Short").val("");
+	$("#custom").val("");
+	$("#ceo").val("");
+	$("#charge_person").val("");
+	$("#busi_condition").val("");
+	$("#item").val("");
+	$("#post_num").val("");
+	$("#addr1").val("");
+	$("#addr2").val("");
+	$("#tel").val("");
+	$("#fax").val("");
+	$("#homepage").val("");
+	$("#coY").prop("checked", false);
+	$("#coN").prop("checked", false);
+	$("#foreignY").prop("checked", false);
+	$("#foreignN").prop("checked", false);
+	$("#choice").val("0").prop("selected", true);
+	$("#country_eng").val("");
+	$("#country_kor").val("");
+	$("input:checkbox[id='special_relation']").prop("checked", false);
+	$("input:checkbox[id='trade_stop']").prop("checked", false);
+	document.getElementById('startDate').value = "2022-05-01";
+	document.getElementById('endDate').value = "2022-05-01";
+	$("#regi_info_man").val("");
+	$("#modi_info_man").val("");
+	$("#factory").val("");
+	$("#trade_bank").val("");
+	$("#account_num").val("");
+}
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
